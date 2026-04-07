@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { client } from '@/sanity/client'
 import { propertyBySlugQuery, propertiesQuery } from '@/sanity/queries'
 import { urlFor } from '@/lib/sanity-image'
-import { formatPrice, formatDate, statusLabels, statusColors, typeLabels } from '@/lib/utils'
+import { formatPrice, formatDate, statusLabels, typeLabels } from '@/lib/utils'
 import { PortableText } from '@portabletext/react'
 import { ImageGallery } from '@/components/property/ImageGallery'
 import { AgentCard } from '@/components/agent/AgentCard'
@@ -12,6 +12,7 @@ import type { Property } from '@/types'
 import { AIPriceAnalysis } from '@/components/property/AIPriceAnalysis'
 import { ContactForm } from '@/components/ContactForm'
 import { ShareButtons } from '@/components/property/ShareButtons'
+import { PropertyFeatures } from '@/components/property/PropertyFeatures'
 
 interface PageProps { params: Promise<{ slug: string }> }
 
@@ -32,11 +33,23 @@ export async function generateMetadata({ params }: PageProps) {
 
 export const revalidate = 60
 
-// Soft status colors aligned with the new palette
 const softStatusColors: Record<string, string> = {
     satilik: 'bg-[#4a6741] text-[#f0ebe0]',
     kiralik: 'bg-[#b07050] text-[#f7f4ef]',
     default: 'bg-[#8fa888] text-[#f7f4ef]',
+}
+
+const USAGE_LABELS: Record<string, string> = {
+    mulk_sahibi: 'Mülk Sahibi',
+    kiracilik: 'Kiracılı',
+    bos: 'Boş',
+}
+
+const DEED_LABELS: Record<string, string> = {
+    kat_mulkiyeti: 'Kat Mülkiyeti',
+    kat_irtifaki: 'Kat İrtifakı',
+    arsa_tapusu: 'Arsa Tapusu',
+    hisseli: 'Hisseli Tapu',
 }
 
 export default async function IlanDetayPage({ params }: PageProps) {
@@ -57,13 +70,10 @@ export default async function IlanDetayPage({ params }: PageProps) {
         { label: 'Toplam Kat', value: details?.totalFloors ? `${details.totalFloors} Kat` : null, icon: '🏗' },
         { label: 'Bina Yaşı', value: details?.buildingAge != null ? `${details.buildingAge} Yıl` : null, icon: '📅' },
         { label: 'Isıtma', value: details?.heating, icon: '🌡' },
+        { label: 'Kullanım Durumu', value: details?.usageStatus ? USAGE_LABELS[details.usageStatus] || details.usageStatus : null, icon: '🔑' },
+        { label: 'Tapu Tipi', value: details?.deedType ? DEED_LABELS[details.deedType] || details.deedType : null, icon: '📋' },
+        { label: 'Otopark Adedi', value: details?.parkingCount ? `${details.parkingCount} Araçlık` : null, icon: '🚗' },
     ].filter((item) => item.value)
-
-    const booleanItems = [
-        { label: 'Otopark', value: details?.parking, icon: '🚗' },
-        { label: 'Eşyalı', value: details?.furnished, icon: '🪑' },
-        { label: 'Asansör', value: details?.elevator, icon: '🛗' },
-    ]
 
     const statusColor = softStatusColors[status] || softStatusColors.default
 
@@ -86,7 +96,7 @@ export default async function IlanDetayPage({ params }: PageProps) {
                     <div className="lg:col-span-2 space-y-8">
                         <ImageGallery images={allImages} title={title} />
 
-                        {/* Title */}
+                        {/* Title block */}
                         <div>
                             <div className="flex flex-wrap items-center gap-2 mb-3">
                                 <span className={`${statusColor} text-xs font-semibold px-3 py-1 rounded-full`}>
@@ -97,14 +107,12 @@ export default async function IlanDetayPage({ params }: PageProps) {
                                     {typeLabels[type]}
                                 </span>
                             </div>
-
                             <h1 style={{ fontFamily: "'Playfair Display',Georgia,serif", fontSize: 'clamp(24px,3.5vw,36px)', fontWeight: 700, color: 'var(--ink)', lineHeight: 1.2 }}>
                                 {title}
                             </h1>
-
                             {location && (
                                 <p className="mt-2 flex items-center gap-1.5" style={{ color: 'var(--ink-soft)', fontSize: '14px' }}>
-                                    <svg className="w-4 h-4" style={{ color: 'var(--terra)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg className="w-4 h-4 shrink-0" style={{ color: 'var(--terra)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                                     </svg>
@@ -118,7 +126,7 @@ export default async function IlanDetayPage({ params }: PageProps) {
                             )}
                         </div>
 
-                        {/* Details */}
+                        {/* Temel detaylar */}
                         {detailItems.length > 0 && (
                             <div className="rounded-xl p-6" style={{ background: 'var(--bej-light)', border: '1px solid var(--bej)' }}>
                                 <h2 style={{ fontFamily: "'Playfair Display',Georgia,serif", fontWeight: 600, fontSize: '17px', color: 'var(--ink)', marginBottom: '20px' }}>
@@ -133,24 +141,20 @@ export default async function IlanDetayPage({ params }: PageProps) {
                                         </div>
                                     ))}
                                 </div>
-
-                                <div className="flex flex-wrap gap-2.5 mt-4">
-                                    {booleanItems.map((item) => (
-                                        <div key={item.label}
-                                            className="flex items-center gap-1.5 text-sm px-3 py-1.5 rounded-full"
-                                            style={item.value
-                                                ? { background: 'var(--green-pale)', border: '1px solid var(--green-light)', color: 'var(--green)' }
-                                                : { background: 'var(--bg-alt)', border: '1px solid var(--bej)', color: 'var(--ink-muted)', textDecoration: 'line-through' }
-                                            }>
-                                            <span>{item.icon}</span>
-                                            <span style={{ fontSize: '12px', fontWeight: 600 }}>{item.label}</span>
-                                        </div>
-                                    ))}
-                                </div>
                             </div>
                         )}
 
-                        {/* Description */}
+                        {/* Özellikler checkbox sistemi */}
+                        {details && (
+                            <div>
+                                <h2 style={{ fontFamily: "'Playfair Display',Georgia,serif", fontSize: '18px', fontWeight: 600, color: 'var(--ink)', marginBottom: '16px' }}>
+                                    Özellikler
+                                </h2>
+                                <PropertyFeatures details={details} />
+                            </div>
+                        )}
+
+                        {/* Açıklama */}
                         {description && description.length > 0 && (
                             <div>
                                 <h2 style={{ fontFamily: "'Playfair Display',Georgia,serif", fontSize: '18px', fontWeight: 600, color: 'var(--ink)', marginBottom: '16px' }}>
@@ -162,7 +166,7 @@ export default async function IlanDetayPage({ params }: PageProps) {
                             </div>
                         )}
 
-                        {/* Location placeholder */}
+                        {/* Konum */}
                         {location?.address && (
                             <div>
                                 <h2 style={{ fontFamily: "'Playfair Display',Georgia,serif", fontSize: '18px', fontWeight: 600, color: 'var(--ink)', marginBottom: '16px' }}>
@@ -183,7 +187,7 @@ export default async function IlanDetayPage({ params }: PageProps) {
                     <div className="lg:col-span-1">
                         <div className="sticky top-24 space-y-5">
 
-                            {/* Price card */}
+                            {/* Fiyat kartı */}
                             <div className="rounded-xl p-6" style={{ background: 'var(--surface)', border: '1px solid var(--bej)', boxShadow: 'var(--shadow-md)' }}>
                                 <div style={{ fontFamily: "'Playfair Display',Georgia,serif", fontSize: '2rem', fontWeight: 700, color: 'var(--ink)' }}>
                                     {formatPrice(price)}
@@ -191,7 +195,6 @@ export default async function IlanDetayPage({ params }: PageProps) {
                                 {status === 'kiralik' && (
                                     <p style={{ color: 'var(--ink-muted)', fontSize: '12px', marginTop: '2px' }}>/ aylık</p>
                                 )}
-
                                 <div className="mt-6 space-y-3">
                                     <a href={`tel:${agent?.phone || ''}`}
                                         className="flex items-center justify-center gap-2 w-full py-3 rounded-lg font-semibold text-sm transition-colors"
@@ -215,7 +218,7 @@ export default async function IlanDetayPage({ params }: PageProps) {
                                 <AIPriceAnalysis property={property} />
                             </div>
 
-                            {/* Contact form */}
+                            {/* İletişim formu */}
                             <div className="rounded-xl p-5" style={{ background: 'var(--surface)', border: '1px solid var(--bej)', boxShadow: 'var(--shadow-sm)' }}>
                                 <h3 style={{ fontWeight: 700, fontSize: '13px', color: 'var(--ink)', marginBottom: '16px' }}>Bilgi Al</h3>
                                 <ContactForm propertyId={property._id} propertyTitle={property.title} />
@@ -223,7 +226,7 @@ export default async function IlanDetayPage({ params }: PageProps) {
 
                             {agent && <AgentCard agent={agent} compact />}
 
-                            {/* Share */}
+                            {/* Paylaş */}
                             <div className="rounded-xl p-4" style={{ background: 'var(--surface)', border: '1px solid var(--bej)', boxShadow: 'var(--shadow-sm)' }}>
                                 <p style={{ fontFamily: "'DM Mono',monospace", fontSize: '10px', color: 'var(--ink-muted)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: '12px' }}>
                                     İlanı Paylaş

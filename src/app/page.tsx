@@ -126,7 +126,7 @@ export default async function HomePage() {
       </section>
 
       {/* ── MARQUEE ─────────────────────────────── */}
-      <div className="overflow-hidden py-4" style={{ background: '#263320', borderTop: '1px solid rgba(198,217,194,0.08)', borderBottom: '1px solid rgba(198,217,194,0.08)' }}>
+      <div className="overflow-hidden py-4" style={{ background: 'var(--surface)', borderTop: '1px solid rgba(198,217,194,0.08)', borderBottom: '1px solid var(--bej)' }}>
         <div className="flex animate-marquee">
           {[...Array(2)].map((_, j) => (
             <div key={j} className="flex items-center gap-12 pr-12">
@@ -138,10 +138,10 @@ export default async function HomePage() {
                     fontWeight: 700,
                     letterSpacing: '0.16em',
                     textTransform: 'uppercase',
-                    color: 'rgba(198,217,194,0.25)',
+                    color: 'rgba(0, 0, 0, 0.25)',
                   }}>
                   {t}
-                  <span className="w-1 h-1 rounded-full" style={{ background: 'rgba(198,217,194,0.15)' }} />
+                  <span className="w-1 h-1 rounded-full" style={{ background: 'rgba(0, 0, 0, 0.15)' }} />
                 </span>
               ))}
             </div>
@@ -150,7 +150,7 @@ export default async function HomePage() {
       </div>
 
       {/* ── STATS ─────────────────────────────────── */}
-      <section style={{ background: 'var(--surface)', borderBottom: '1px solid var(--bej)' }}>
+      {/* <section style={{ background: 'var(--surface)', borderBottom: '1px solid var(--bej)' }}>
         <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
           <div className="grid grid-cols-3 divide-x" style={{ borderColor: 'var(--bej)' }}>
             {[
@@ -182,7 +182,7 @@ export default async function HomePage() {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* ── FEATURED ─────────────────────────────── */}
       {properties.length > 0 && (
@@ -278,7 +278,7 @@ export default async function HomePage() {
 
             <div className="space-y-px">
               {[
-                { num: '01', title: 'AI Destekli Analiz', desc: 'Fiyat analizi, karşılaştırma ve ilan açıklaması yapay zeka ile.' },
+                { num: '01', title: 'AI Destekli Analiz', desc: 'Fiyat analizi ve karşılaştırma yapay zeka ile.' },
                 { num: '02', title: 'Harita Görünümü', desc: 'Tüm ilanları interaktif harita üzerinde keşfedin.' },
                 { num: '03', title: 'Ev Değerleme', desc: 'Güncel emlak sitelerini tarayarak evinizin gerçek piyasa değerini öğrenin.' },
                 { num: '04', title: 'Uzman Danışman', desc: 'Her adımda deneyimli danışmanlarımız yanınızda.' },

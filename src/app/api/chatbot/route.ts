@@ -13,23 +13,33 @@ export async function POST(req: NextRequest) {
         const mPerKare = p.details?.area && p.price
             ? Math.round(p.price / p.details.area).toLocaleString('tr-TR')
             : null
-        const details = [
-            p.details?.rooms && `${p.details.rooms} oda`,
-            p.details?.area && `${p.details.area}m²`,
-            p.details?.netArea && `net ${p.details.netArea}m²`,
-            p.details?.floor != null && `${p.details.floor}. kat`,
-            p.details?.buildingAge != null && `${p.details.buildingAge} yaşında`,
-            p.details?.parking && 'otopark',
-            p.details?.elevator && 'asansör',
-            p.details?.furnished && 'eşyalı',
+        const d = p.details
+        const extras = [
+            d?.inComplex && 'site içi',
+            d?.indoorPool && 'kapalı havuz',
+            d?.gym && 'fitness',
+            d?.parking && `otopark${d.parkingCount ? `(${d.parkingCount})` : ''}`,
+            d?.elevator && 'asansör',
+            d?.furnished && 'eşyalı',
+            d?.garden && 'bahçe',
+            d?.viewSea && 'deniz manzarası',
+            d?.viewCity && 'şehir manzarası',
+        ].filter(Boolean).join(', ')
+
+        const baseDetails = [
+            d?.rooms && `${d.rooms} oda`,
+            d?.area && `${d.area}m²`,
+            d?.netArea && `net ${d.netArea}m²`,
+            d?.floor != null && `${d.floor}. kat`,
+            d?.buildingAge != null && `${d.buildingAge} yaşında`,
         ].filter(Boolean).join(', ')
 
         const statusLabel = p.status === 'satilik' ? 'Satılık' : p.status === 'kiralik' ? 'Kiralık' : p.status
 
-        return `[ID:${p._id}|SLUG:${p.slug?.current}|TITLE:${p.title}] ${statusLabel} | ${p.price?.toLocaleString('tr-TR')} ₺${mPerKare ? ` (m²: ~${mPerKare}₺)` : ''} | ${loc} | ${details} | /ilanlar/${p.slug?.current}`
+        return `[ID:${p._id}|SLUG:${p.slug?.current}|TITLE:${p.title}] ${statusLabel} | ${p.price?.toLocaleString('tr-TR')} ₺${mPerKare ? ` (m²: ~${mPerKare}₺)` : ''} | ${loc} | ${baseDetails}${extras ? ` | ${extras}` : ''} | /ilanlar/${p.slug?.current}`
     }).join('\n')
 
-    const systemPrompt = `Sen deneyimli, sıcak ve güvenilir bir Türk emlak danışmanısın. Butik bir emlak ofisi adına müşterilerle konuşuyorsun.
+    const systemPrompt = `Sen deneyimli, sıcak ve güvenilir bir Türk emlak danışmanısın. Butik bir emlak ofisi adına müşterilerle konuşuyorsun. Fiyatlar hakkında soru geldiğinde, fiyatın neden makul olduğunu somut özellikler ve bölge karşılaştırmasıyla açıkla — müşteriyi doğru bilgiyle yönlendir.
 
 MEVCUT İLANLAR:
 ${propertyContext}
@@ -42,18 +52,16 @@ Müşteri randevu almak istediğinde şu bilgileri sırayla topla (hepsini tek s
 4. Hangi ilan için (ilgilendikleri ilanı belirt)
 5. Varsa ek not
 
-Tüm bilgiler tamamlandığında MUTLAKA şu JSON bloğunu yanıtının sonuna ekle (başka hiçbir şey ekleme, sadece bu format):
+Tüm bilgiler tamamlandığında MUTLAKA şu JSON bloğunu yanıtının sonuna ekle:
 
 RANDEVU_JSON:{"name":"...","phone":"...","datetime":"...","propertyId":"...","propertyTitle":"...","message":"..."}
-
-Örnek: Müşteri adını, telefonunu ve tarihi verdiyse:
-RANDEVU_JSON:{"name":"Ahmet Yılmaz","phone":"0532 xxx xx xx","datetime":"Yarın saat 14:00","propertyId":"abc123","propertyTitle":"Kadıköy 3+1 Daire","message":"Çocuklu aile, bahçe tercih eder"}
 
 KONUŞMA KURALLARI:
 - Sıcak, samimi ama profesyonel
 - Maksimum 4-5 cümle veya 3 madde
 - Emoji yok (sadece arada 🏠)
 - Her öneride müşteriye özel faydayı vurgula
+- Fiyat sorularında savunmaya geçme — özellikleri ve bölge değerini öne çıkar
 - İtirazları nazikçe karşıla
 - Uygun ilan yoksa dürüstçe söyle
 
@@ -86,15 +94,12 @@ YASAK: Olmayan ilan uydurmak. Kesin fiyat garantisi. Baskıcı dil.`
         let text: string = data.choices?.[0]?.message?.content
         if (!text) return NextResponse.json({ error: 'Boş yanıt' }, { status: 500 })
 
-        // Randevu JSON'ı tespit et
         const jsonMatch = text.match(/RANDEVU_JSON:(\{[\s\S]*?\})/)
         let whatsappUrl: string | null = null
 
         if (jsonMatch) {
             try {
                 const randevuData = JSON.parse(jsonMatch[1])
-
-                // Sanity'e kaydet + WhatsApp URL al
                 const leadRes = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/lead`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -102,8 +107,6 @@ YASAK: Olmayan ilan uydurmak. Kesin fiyat garantisi. Baskıcı dil.`
                 })
                 const leadData = await leadRes.json()
                 whatsappUrl = leadData.whatsappUrl || null
-
-                // JSON bloğunu temiz mesajdan çıkar
                 text = text.replace(/RANDEVU_JSON:\{[\s\S]*?\}/, '').trim()
             } catch (e) {
                 console.error('Randevu JSON parse hatası:', e)
