@@ -107,12 +107,7 @@ export function AgentCard({ agent, compact = false }: AgentCardProps) {
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-400"
                     style={{ background: 'linear-gradient(to top, rgba(46,61,42,0.55) 0%, transparent 60%)' }} />
 
-                {agent.propertyCount != null && (
-                    <div className="absolute top-3 right-3 text-xs font-bold px-3 py-1.5 rounded-full"
-                        style={{ background: 'rgba(247,244,239,0.92)', backdropFilter: 'blur(8px)', color: 'var(--green)', border: '1px solid var(--green-light)' }}>
-                        {agent.propertyCount} ilan
-                    </div>
-                )}
+
             </div>
 
             {/* Content */}
@@ -125,11 +120,7 @@ export function AgentCard({ agent, compact = false }: AgentCardProps) {
                         {agent.title}
                     </p>
                 )}
-                {agent.bio && (
-                    <p className="line-clamp-2 mt-3" style={{ fontSize: '13px', color: 'var(--ink-soft)', lineHeight: 1.75 }}>
-                        {agent.bio}
-                    </p>
-                )}
+
                 <div className="flex gap-2 mt-5">
                     {agent.phone && (
                         <a

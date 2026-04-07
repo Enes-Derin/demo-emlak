@@ -90,11 +90,83 @@ export interface Property {
         lat?: number
         lng?: number
     }
-    details?: PropertyDetails
+    details?: PropertyDetails           // sayısal detaylar (alan, kat vs)
+    details_features?: PropertyDetailsFeatures  // boolean özellikler
     agent?: Agent
     featured?: boolean
     publishedAt?: string
 }
+
+export interface PropertyDetailsFeatures {
+    views?: {
+        viewCity?: boolean
+        viewSea?: boolean
+        viewNature?: boolean
+        viewPool?: boolean
+    }
+    site?: {
+        inComplex?: boolean
+        garden?: boolean
+        parking?: boolean
+        indoorParking?: boolean
+        openParking?: boolean
+        barbecue?: boolean
+    }
+    interior?: {
+        furnished?: boolean
+        elevator?: boolean
+        storage?: boolean
+        builtInKitchen?: boolean
+        closedKitchen?: boolean
+        whiteGoods?: boolean
+        steelDoor?: boolean
+        parquetFloor?: boolean
+        airConditioning?: boolean
+        doubleGlazing?: boolean
+        builtInWardrobe?: boolean
+        dressingRoom?: boolean
+        electricShutter?: boolean
+        centralHotWater?: boolean
+        vestibule?: boolean
+        sauna?: boolean
+        fireplace?: boolean
+        bathtub?: boolean
+        staffRoom?: boolean
+    }
+    tech?: {
+        videoIntercom?: boolean
+        securityCamera?: boolean
+        cableTv?: boolean
+        satellite?: boolean
+        adsl?: boolean
+        generator?: boolean
+        waterTank?: boolean
+        soundInsulation?: boolean
+        technicalService247?: boolean
+    }
+    kitchen?: {
+        oven?: boolean
+        rangeHood?: boolean
+    }
+    social?: {
+        indoorPool?: boolean
+        playground?: boolean
+        gym?: boolean
+        basketballCourt?: boolean
+        kidsRoom?: boolean
+        nursery?: boolean
+        mall?: boolean
+        dryCleaning?: boolean
+        hairdresser?: boolean
+        market?: boolean
+        mosque?: boolean
+        cafeRestaurant?: boolean
+        atm?: boolean
+        bank?: boolean
+        pharmacy?: boolean
+    }
+}
+
 
 export interface Agent {
     _id: string
