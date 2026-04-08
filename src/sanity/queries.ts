@@ -44,6 +44,7 @@ export const propertyBySlugQuery = groq`
     description,
     location,
     details,
+    details_features,
     publishedAt,
     "agent": agent->{_id, name, photo, phone, email, title, bio}
   }
@@ -120,3 +121,4 @@ export const activityFeedQuery = groq`
     }
   }
 `
+

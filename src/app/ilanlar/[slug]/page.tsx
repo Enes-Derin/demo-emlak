@@ -145,12 +145,13 @@ export default async function IlanDetayPage({ params }: PageProps) {
                         )}
 
                         {/* Özellikler checkbox sistemi */}
-                        {details && (
+                        {property.details_features && (
+
                             <div>
                                 <h2 style={{ fontFamily: "'Playfair Display',Georgia,serif", fontSize: '18px', fontWeight: 600, color: 'var(--ink)', marginBottom: '16px' }}>
                                     Özellikler
                                 </h2>
-                                <PropertyFeatures details={details} />
+                                <PropertyFeatures features={property.details_features} />
                             </div>
                         )}
 

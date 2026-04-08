@@ -1,130 +1,145 @@
-import type { PropertyDetails } from '@/types'
-
-interface FeatureGroup {
-    title: string
-    icon: string
-    items: { label: string; key: keyof PropertyDetails }[]
-}
-
-const FEATURE_GROUPS: FeatureGroup[] = [
-    {
-        title: 'İç Mekan',
-        icon: '🏠',
-        items: [
-            { label: 'Depo/Kiler', key: 'storage' },
-            { label: 'Ankastre Mutfak', key: 'builtInKitchen' },
-            { label: 'Beyaz Eşya', key: 'whiteGoods' },
-            { label: 'Çelik Kapı', key: 'steelDoor' },
-            { label: 'Parke Zemin', key: 'parquetFloor' },
-            { label: 'Kablo TV', key: 'cableTv' },
-            { label: 'Klima', key: 'airConditioning' },
-            { label: 'Isıcam', key: 'doubleGlazing' },
-            { label: 'Görüntülü Diyafon', key: 'videoIntercom' },
-            { label: 'Gömme Dolap', key: 'builtInWardrobe' },
-            { label: 'Giyinme Odası', key: 'dressingRoom' },
-            { label: 'Elektrikli Panjur', key: 'electricShutter' },
-            { label: 'Merkezi Sıcak Su', key: 'centralHotWater' },
-            { label: 'Fırın', key: 'oven' },
-            { label: 'Davlumbaz', key: 'rangeHood' },
-            { label: 'Vestiyer', key: 'vestibule' },
-            { label: 'İnternet', key: 'adsl' },
-            { label: 'Kapalı Mutfak', key: 'closedKitchen' },
-            { label: 'Sauna', key: 'sauna' },
-            { label: 'Şömine', key: 'fireplace' },
-            { label: 'Küvet', key: 'bathtub' },
-            { label: 'Yardımcı Odası', key: 'staffRoom' },
-            { label: 'Barbekü', key: 'barbecue' },
-            { label: 'Uydu', key: 'satellite' },
-        ],
-    },
-    {
-        title: 'Sosyal Tesisler',
-        icon: '🏊',
-        items: [
-            { label: 'Kapalı Yüzme Havuzu', key: 'indoorPool' },
-            { label: 'Kapalı Otopark', key: 'indoorParking' },
-            { label: 'Açık Otopark', key: 'openParking' },
-            { label: 'Oyun Parkı', key: 'playground' },
-            { label: 'Fitness/Gym', key: 'gym' },
-            { label: 'Basketbol Sahası', key: 'basketballCourt' },
-            { label: 'Çocuk Oyun Odası', key: 'kidsRoom' },
-            { label: 'Jeneratör', key: 'generator' },
-            { label: 'Su Deposu & Hidrofor', key: 'waterTank' },
-            { label: 'Ses İzolasyonu', key: 'soundInsulation' },
-            { label: '7/24 Teknik Servis', key: 'technicalService247' },
-            { label: 'Güvenlik Kamerası', key: 'securityCamera' },
-            { label: 'Kreş', key: 'nursery' },
-            { label: 'AVM', key: 'mall' },
-            { label: 'Kuru Temizleme', key: 'dryCleaning' },
-            { label: 'Kuaför', key: 'hairdresser' },
-            { label: 'Market', key: 'market' },
-            { label: 'Mescid/Cami', key: 'mosque' },
-            { label: 'Cafe & Restaurant', key: 'cafeRestaurant' },
-            { label: 'ATM', key: 'atm' },
-            { label: 'Banka', key: 'bank' },
-            { label: 'Eczane/Medikal', key: 'pharmacy' },
-        ],
-    },
-]
-
-const VIEW_ITEMS = [
-    { label: 'Şehir Manzarası', key: 'viewCity' as keyof PropertyDetails },
-    { label: 'Deniz Manzarası', key: 'viewSea' as keyof PropertyDetails },
-    { label: 'Doğa Manzarası', key: 'viewNature' as keyof PropertyDetails },
-    { label: 'Havuz Manzarası', key: 'viewPool' as keyof PropertyDetails },
-    { label: 'Site İçinde', key: 'inComplex' as keyof PropertyDetails },
-    { label: 'Bahçe', key: 'garden' as keyof PropertyDetails },
-]
+import type { PropertyDetailsFeatures } from '@/types'
 
 interface Props {
-    details: PropertyDetails
+    features: PropertyDetailsFeatures
 }
 
-export function PropertyFeatures({ details }: Props) {
-    const activeViews = VIEW_ITEMS.filter(i => details[i.key])
+export function PropertyFeatures({ features }: Props) {
+    const { views, site, interior, tech, kitchen, social } = features ?? {}
+
+    const activeViews = [
+        views?.viewCity && 'Şehir Manzarası',
+        views?.viewSea && 'Deniz Manzarası',
+        views?.viewNature && 'Doğa Manzarası',
+        views?.viewPool && 'Havuz Manzarası',
+        site?.inComplex && 'Site İçinde',
+        site?.garden && 'Bahçe',
+    ].filter(Boolean) as string[]
+
+    const activeSite = [
+        site?.parking && 'Otopark',
+        site?.indoorParking && 'Kapalı Otopark',
+        site?.openParking && 'Açık Otopark',
+        site?.barbecue && 'Barbekü',
+    ].filter(Boolean) as string[]
+
+    const activeInterior = [
+        interior?.furnished && 'Eşyalı',
+        interior?.elevator && 'Asansör',
+        interior?.storage && 'Depo/Kiler',
+        interior?.builtInKitchen && 'Ankastre Mutfak',
+        interior?.closedKitchen && 'Kapalı Mutfak',
+        interior?.whiteGoods && 'Beyaz Eşya',
+        interior?.steelDoor && 'Çelik Kapı',
+        interior?.parquetFloor && 'Parke Zemin',
+        interior?.airConditioning && 'Klima',
+        interior?.doubleGlazing && 'Isıcam',
+        interior?.builtInWardrobe && 'Gömme Dolap',
+        interior?.dressingRoom && 'Giyinme Odası',
+        interior?.electricShutter && 'Elektrikli Panjur',
+        interior?.centralHotWater && 'Merkezi Sıcak Su',
+        interior?.vestibule && 'Vestiyer',
+        interior?.sauna && 'Sauna',
+        interior?.fireplace && 'Şömine',
+        interior?.bathtub && 'Küvet',
+        interior?.staffRoom && 'Yardımcı Odası',
+    ].filter(Boolean) as string[]
+
+    const activeKitchen = [
+        kitchen?.oven && 'Fırın',
+        kitchen?.rangeHood && 'Davlumbaz',
+    ].filter(Boolean) as string[]
+
+    const activeTech = [
+        tech?.videoIntercom && 'Görüntülü Diyafon',
+        tech?.securityCamera && 'Güvenlik Kamerası',
+        tech?.cableTv && 'Kablo TV',
+        tech?.satellite && 'Uydu',
+        tech?.adsl && 'ADSL/Fiber İnternet',
+        tech?.generator && 'Jeneratör',
+        tech?.waterTank && 'Su Deposu & Hidrofor',
+        tech?.soundInsulation && 'Ses İzolasyonu',
+        tech?.technicalService247 && '7/24 Teknik Servis',
+    ].filter(Boolean) as string[]
+
+    const activeSocial = [
+        social?.indoorPool && 'Kapalı Yüzme Havuzu',
+        social?.playground && 'Oyun Parkı',
+        social?.gym && 'Fitness/Gym',
+        social?.basketballCourt && 'Basketbol Sahası',
+        social?.kidsRoom && 'Çocuk Oyun Odası',
+        social?.nursery && 'Kreş',
+        social?.mall && 'AVM',
+        social?.dryCleaning && 'Kuru Temizleme',
+        social?.hairdresser && 'Kuaför',
+        social?.market && 'Market',
+        social?.mosque && 'Mescid/Cami',
+        social?.cafeRestaurant && 'Cafe & Restaurant',
+        social?.atm && 'ATM',
+        social?.bank && 'Banka',
+        social?.pharmacy && 'Eczane/Medikal',
+    ].filter(Boolean) as string[]
+
+    const groups = [
+        { title: 'Site & Dış Alan', icon: '🏘️', items: activeSite },
+        { title: 'İç Mekan', icon: '🛋️', items: activeInterior },
+        { title: 'Mutfak', icon: '🍳', items: activeKitchen },
+        { title: 'Teknoloji & Güvenlik', icon: '📡', items: activeTech },
+        { title: 'Sosyal Tesisler', icon: '🏊', items: activeSocial },
+    ]
+
+    const hasAny = activeViews.length > 0 || groups.some(g => g.items.length > 0)
+    if (!hasAny) return null
 
     return (
         <div className="space-y-6">
-            {/* Manzara & Konum */}
             {activeViews.length > 0 && (
-                <div className="rounded-xl p-5" style={{ background: 'var(--bej-light)', border: '1px solid var(--bej)' }}>
-                    <h3 className="mb-3" style={{ fontFamily: "'DM Mono',monospace", fontSize: '10px', fontWeight: 700, color: 'var(--ink-muted)', letterSpacing: '0.14em', textTransform: 'uppercase' }}>
-                        Manzara & Konum
-                    </h3>
+                <FeatureSection title="Manzara & Konum" icon="🌅">
                     <div className="flex flex-wrap gap-2">
-                        {activeViews.map(item => (
-                            <span key={item.key} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold"
-                                style={{ background: 'var(--green-pale)', color: 'var(--green)', border: '1px solid var(--green-light)' }}>
-                                <span style={{ color: 'var(--green)', fontSize: '14px' }}>✓</span>
-                                {item.label}
-                            </span>
-                        ))}
+                        {activeViews.map(label => <Chip key={label} label={label} />)}
                     </div>
-                </div>
+                </FeatureSection>
             )}
-
-            {/* Feature groups */}
-            {FEATURE_GROUPS.map(group => {
-                const activeItems = group.items.filter(i => details[i.key])
-                if (activeItems.length === 0) return null
-
-                return (
-                    <div key={group.title} className="rounded-xl p-5" style={{ background: 'var(--bej-light)', border: '1px solid var(--bej)' }}>
-                        <h3 className="mb-4" style={{ fontFamily: "'DM Mono',monospace", fontSize: '10px', fontWeight: 700, color: 'var(--ink-muted)', letterSpacing: '0.14em', textTransform: 'uppercase' }}>
-                            {group.icon} {group.title}
-                        </h3>
+            {groups.map(group =>
+                group.items.length > 0 ? (
+                    <FeatureSection key={group.title} title={group.title} icon={group.icon}>
                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                            {activeItems.map(item => (
-                                <div key={item.key} className="flex items-center gap-2 px-3 py-2 rounded-lg"
-                                    style={{ background: 'var(--surface)', border: '1px solid var(--green-light)' }}>
-                                    <span style={{ color: 'var(--green)', fontSize: '13px', fontWeight: 700 }}>✓</span>
-                                    <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--ink)' }}>{item.label}</span>
-                                </div>
-                            ))}
+                            {group.items.map(label => <FeatureItem key={label} label={label} />)}
                         </div>
-                    </div>
-                )
-            })}
+                    </FeatureSection>
+                ) : null
+            )}
+        </div>
+    )
+}
+
+function FeatureSection({ title, icon, children }: { title: string; icon: string; children: React.ReactNode }) {
+    return (
+        <div className="rounded-xl p-5" style={{ background: 'var(--bej-light)', border: '1px solid var(--bej)' }}>
+            <h3 className="mb-3" style={{ fontFamily: "'DM Mono',monospace", fontSize: '10px', fontWeight: 700, color: 'var(--ink-muted)', letterSpacing: '0.14em', textTransform: 'uppercase' }}>
+                {icon} {title}
+            </h3>
+            {children}
+        </div>
+    )
+}
+
+function Chip({ label }: { label: string }) {
+    return (
+        <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold"
+            style={{ background: 'var(--green-pale)', color: 'var(--green)', border: '1px solid var(--green-light)' }}>
+            <span style={{ color: 'var(--green)', fontSize: '14px' }}>✓</span>
+            {label}
+        </span>
+    )
+}
+
+function FeatureItem({ label }: { label: string }) {
+    return (
+        <div className="flex items-center gap-2 px-3 py-2 rounded-lg"
+            style={{ background: 'var(--surface)', border: '1px solid var(--green-light)' }}>
+            <span style={{ color: 'var(--green)', fontSize: '13px', fontWeight: 700 }}>✓</span>
+            <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--ink)' }}>{label}</span>
         </div>
     )
 }

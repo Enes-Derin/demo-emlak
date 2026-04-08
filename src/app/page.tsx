@@ -279,9 +279,8 @@ export default async function HomePage() {
             <div className="space-y-px">
               {[
                 { num: '01', title: 'AI Destekli Analiz', desc: 'Fiyat analizi ve karşılaştırma yapay zeka ile.' },
-                { num: '02', title: 'Harita Görünümü', desc: 'Tüm ilanları interaktif harita üzerinde keşfedin.' },
-                { num: '03', title: 'Ev Değerleme', desc: 'Güncel emlak sitelerini tarayarak evinizin gerçek piyasa değerini öğrenin.' },
-                { num: '04', title: 'Uzman Danışman', desc: 'Her adımda deneyimli danışmanlarımız yanınızda.' },
+                { num: '02', title: 'Ev Değerleme', desc: 'Güncel emlak sitelerini tarayarak evinizin gerçek piyasa değerini öğrenin.' },
+                { num: '03', title: 'Uzman Danışman', desc: 'Her adımda deneyimli danışmanlarımız yanınızda.' },
               ].map((item, i) => (
                 <ScrollReveal key={item.num} type="right" delay={i * 80}>
                   <div className="group flex gap-6 p-6 sm:p-8 transition-colors duration-200 cursor-default hover:bg-[var(--green-pale)]"

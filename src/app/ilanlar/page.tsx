@@ -2,7 +2,6 @@ import { client } from '@/sanity/client'
 import { propertiesQuery } from '@/sanity/queries'
 import { PropertyCard } from '@/components/property/PropertyCard'
 import { PropertyFilters } from '@/components/property/PropertyFilters'
-import { MapToggle, MapView } from '@/components/property/MapToggle'
 import { ScrollReveal } from '@/components/ScrollReveal'
 import type { Property } from '@/types'
 
@@ -53,7 +52,6 @@ export default async function IlanlarPage({ searchParams }: PageProps) {
                                 {filtered.length} ilan listeleniyor
                             </p>
                         </div>
-                        <MapToggle isMapView={isMapView} />
                     </div>
                 </div>
             </div>
@@ -67,25 +65,15 @@ export default async function IlanlarPage({ searchParams }: PageProps) {
                     </aside>
 
                     <div className="flex-1 min-w-0">
-                        {isMapView ? (
-                            <MapView properties={filtered} />
-                        ) : filtered.length === 0 ? (
-                            <div className="flex flex-col items-center justify-center py-24 text-center">
-                                <div style={{ fontFamily: "'Playfair Display',Georgia,serif", fontSize: 'clamp(80px,12vw,130px)', fontWeight: 700, color: 'var(--bej)', lineHeight: 1, marginBottom: '12px' }}>
-                                    0
-                                </div>
-                                <p style={{ color: 'var(--ink-soft)', fontWeight: 600, fontSize: '15px', marginBottom: '4px' }}>Sonuç bulunamadı</p>
-                                <p style={{ color: 'var(--ink-muted)', fontSize: '13px' }}>Filtrelerinizi değiştirmeyi deneyin.</p>
-                            </div>
-                        ) : (
-                            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
-                                {filtered.map((property, i) => (
-                                    <ScrollReveal key={property._id} type="up" delay={Math.min(i * 50, 300)}>
-                                        <PropertyCard property={property} />
-                                    </ScrollReveal>
-                                ))}
-                            </div>
-                        )}
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+                            {filtered.map((property, i) => (
+                                <ScrollReveal key={property._id} type="up" delay={Math.min(i * 50, 300)}>
+                                    <PropertyCard property={property} />
+                                </ScrollReveal>
+                            ))}
+                        </div>
+
                     </div>
                 </div>
             </div>
