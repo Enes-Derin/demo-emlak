@@ -10,63 +10,56 @@ export default function IletisimPage() {
     ]
 
     return (
-        <div className="min-h-screen" style={{ background: 'var(--bg)' }}>
+        <div className="min-h-screen" style={{ background: '#f7f4ef' }}>
 
-            {/* Hero strip */}
-            <div style={{ background: '#3a5432', paddingTop: '6.5rem', paddingBottom: '3.5rem' }} className="px-6 lg:px-12">
-                <div className="max-w-[1400px] mx-auto">
-                    <div className="flex items-center gap-3 mb-5">
-                        <span className="w-7 h-px" style={{ background: 'rgba(198,217,194,0.35)' }} />
-                        <span style={{ color: 'rgba(198,217,194,0.4)', fontFamily: "'DM Mono',monospace", fontSize: '10px', letterSpacing: '0.18em', textTransform: 'uppercase' }}>
+            {/* Hero */}
+            <div className="relative overflow-hidden" style={{ background: '#1e2d1a', paddingTop: '7rem', paddingBottom: '5rem' }}>
+                <div className="absolute inset-0 pointer-events-none"
+                    style={{ background: 'radial-gradient(ellipse 60% 50% at 30% 100%, rgba(74,103,65,0.18) 0%, transparent 70%)' }}
+                />
+                <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16 relative">
+                    <div className="flex items-center gap-3 mb-6">
+                        <div className="w-5 h-px" style={{ background: 'rgba(198,217,194,0.3)' }} />
+                        <span style={{ color: 'rgba(198,217,194,0.35)', fontFamily: "'DM Mono',monospace", fontSize: '10px', letterSpacing: '0.2em', textTransform: 'uppercase' }}>
                             İletişim
                         </span>
                     </div>
-                    <h1 style={{
-                        fontFamily: "'Playfair Display',Georgia,serif",
-                        fontSize: 'clamp(38px,5.5vw,75px)',
-                        fontWeight: 700,
-                        color: '#f0ebe0',
-                        lineHeight: 1.05,
-                    }}>
+                    <h1 style={{ fontFamily: "'Playfair Display',Georgia,serif", fontSize: 'clamp(46px,7vw,92px)', fontWeight: 700, color: '#ede8dc', lineHeight: 0.92, letterSpacing: '-0.02em' }}>
                         Bizimle<br />
-                        <em style={{ fontStyle: 'italic', color: 'rgba(240,235,224,0.28)' }}>İletişime Geçin</em>
+                        <em style={{ fontStyle: 'italic', color: 'rgba(237,232,220,0.16)', fontWeight: 300 }}>İletişime Geçin</em>
                     </h1>
                 </div>
             </div>
 
             {/* Body */}
-            <div className="max-w-[1400px] mx-auto px-6 lg:px-12 py-14 lg:py-20">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 lg:gap-20 items-start">
+            <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16 py-16 lg:py-24">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-28 items-start">
 
-                    {/* Left — info */}
+                    {/* Left */}
                     <div>
-                        <p style={{ color: 'var(--ink-soft)', fontSize: '15px', lineHeight: 1.8, maxWidth: '420px', marginBottom: '40px' }}>
-                            Sormak istediğiniz her şey için buradayız. Uzman ekibimiz en kısa sürede size geri dönecektir.
+                        <p style={{ color: '#6b6760', fontSize: '15px', lineHeight: 1.85, maxWidth: '400px', marginBottom: '48px' }}>
+                            Her sorunuz için buradayız. Uzman ekibimiz en kısa sürede size geri dönecek.
                         </p>
-
-                        <div className="space-y-7">
+                        <div className="space-y-8">
                             {contactItems.map((item) => (
-                                <div key={item.title} className="flex items-start gap-4">
-                                    <div className="w-11 h-11 rounded-lg flex items-center justify-center text-lg shrink-0"
-                                        style={{ background: 'var(--green-pale)', border: '1px solid var(--green-light)' }}>
-                                        {item.icon}
-                                    </div>
+                                <div key={item.title} className="flex items-start gap-5">
+
                                     <div>
-                                        <p style={{ color: 'var(--ink-muted)', fontFamily: "'DM Mono',monospace", fontSize: '10px', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: '3px' }}>
+                                        <p style={{ color: '#a09d98', fontFamily: "'DM Mono',monospace", fontSize: '10px', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: '4px' }}>
                                             {item.title}
                                         </p>
-                                        <p style={{ fontWeight: 600, color: 'var(--ink)', fontSize: '14px' }}>{item.value}</p>
-                                        <p style={{ color: 'var(--ink-soft)', fontSize: '13px' }}>{item.sub}</p>
+                                        <p style={{ fontWeight: 600, color: '#2c2b28', fontSize: '15px' }}>{item.value}</p>
+                                        <p style={{ color: '#6b6760', fontSize: '13px', marginTop: '2px' }}>{item.sub}</p>
                                     </div>
                                 </div>
                             ))}
                         </div>
                     </div>
 
-                    {/* Right — form */}
-                    <div className="rounded-xl p-8 lg:p-10"
-                        style={{ background: 'var(--surface)', border: '1px solid var(--bej)', boxShadow: 'var(--shadow-md)' }}>
-                        <h2 style={{ fontFamily: "'Playfair Display',Georgia,serif", fontSize: '22px', fontWeight: 600, color: 'var(--ink)', marginBottom: '24px' }}>
+                    {/* Right */}
+                    <div className="rounded-2xl p-8 lg:p-10"
+                        style={{ background: '#ffffff', border: '1px solid #e8e3d8', boxShadow: '0 4px 24px rgba(44,43,40,0.07)' }}>
+                        <h2 style={{ fontFamily: "'Playfair Display',Georgia,serif", fontSize: '24px', fontWeight: 600, color: '#2c2b28', marginBottom: '28px' }}>
                             Mesaj Gönderin
                         </h2>
                         <ContactForm />
