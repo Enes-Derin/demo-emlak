@@ -42,7 +42,7 @@ function formatMessage(text: string) {
 export function ChatBot() {
     const [open, setOpen] = useState(false)
     const [messages, setMessages] = useState<Message[]>([
-        { role: 'assistant', content: 'Merhaba! 🏠 Size en uygun evi bulmak için buradayım.\n\nKiralık mı arıyorsunuz, satın almayı mı düşünüyorsunuz?' }
+        { role: 'assistant', content: 'Merhaba! Size en uygun evi bulmak için buradayım.\n\nKiralık mı arıyorsunuz, satın almayı mı düşünüyorsunuz?' }
     ])
     const [input, setInput] = useState('')
     const [loading, setLoading] = useState(false)
@@ -119,7 +119,7 @@ export function ChatBot() {
                         style={{ background: '#3a5432', borderBottom: '1px solid rgba(198,217,194,0.12)' }}>
                         <div className="w-9 h-9 rounded-full flex items-center justify-center text-lg"
                             style={{ background: 'rgba(198,217,194,0.15)' }}>
-                            🏠
+                            A
                         </div>
                         <div>
                             <p style={{ color: '#f0ebe0', fontFamily: "'Playfair Display',Georgia,serif", fontWeight: 600, fontSize: '14px' }}>
